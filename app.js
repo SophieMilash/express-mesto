@@ -23,5 +23,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/users', require('./routes/user'));
+app.use('/cards', require('./routes/card'));
 
 app.listen(PORT);
