@@ -12,7 +12,12 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+      }
+      res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    });
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -20,7 +25,12 @@ module.exports.deleteCard = (req, res) => {
 
   Card.findByIdAndRemove(cardId)
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
+      }
+      res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    });
 };
 
 module.exports.setLikeCard = (req, res) => {
@@ -33,7 +43,12 @@ module.exports.setLikeCard = (req, res) => {
     { new: true },
   )
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+      }
+      res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    });
 };
 
 module.exports.removeLikeCard = (req, res) => {
@@ -46,5 +61,10 @@ module.exports.removeLikeCard = (req, res) => {
     { new: true },
   )
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для снятии лайка.' });
+      }
+      res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+    });
 };

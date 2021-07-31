@@ -1,12 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const usersRoute = require('./routes/user');
+const cardsRoute = require('./routes/card');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -22,7 +23,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/users', require('./routes/user'));
-app.use('/cards', require('./routes/card'));
+app.use('/users', usersRoute);
+app.use('/cards', cardsRoute);
+
+app.use('/*', (req, res) => {
+  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+});
 
 app.listen(PORT);
