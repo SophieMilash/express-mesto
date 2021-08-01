@@ -19,6 +19,8 @@ module.exports.getUserById = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Пользователь по указанному _id не найден.' });
+      } else if (err.statusCode === 404) {
+        res.status(404).send({ message: err.message });
       } else {
         res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
       }
@@ -62,6 +64,8 @@ module.exports.updateUser = (req, res) => {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Пользователь с указанным _id не найден.' });
+      } else if (err.statusCode === 404) {
+        res.status(404).send({ message: err.message });
       } else {
         res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
       }
@@ -91,6 +95,8 @@ module.exports.updateUserAvatar = (req, res) => {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Пользователь с указанным _id не найден.' });
+      } else if (err.statusCode === 404) {
+        res.status(404).send({ message: err.message });
       } else {
         res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
       }
