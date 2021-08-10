@@ -33,7 +33,26 @@ module.exports.getUserById = (req, res) => {
       error.statusCode = 404;
       throw error;
     })
-    .then((user) => res.send(user))
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Пользователь по указанному _id не найден.' });
+      } else if (err.statusCode === 404) {
+        res.status(404).send({ message: err.message });
+      } else {
+        res.status(500).send({ message: `Произошла ошибка: ${err.message}` });
+      }
+    });
+};
+
+module.exports.getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .orFail(() => {
+      const error = new Error('Пользователь по указанному _id не найден.');
+      error.statusCode = 404;
+      throw error;
+    })
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Пользователь по указанному _id не найден.' });
