@@ -11,6 +11,8 @@ const usersRoute = require('./routes/user');
 const cardsRoute = require('./routes/card');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const error = require('./middlewares/error');
+
 const NotFoundError = require('./errors/not-found-err');
 
 const { PORT = 3000 } = process.env;
@@ -60,11 +62,6 @@ app.use('*', () => {
 });
 
 app.use(errors());
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : `Произошла ошибка: ${message}` });
-  next();
-});
+app.use(error);
 
 app.listen(PORT);
