@@ -8,7 +8,7 @@ const AuthorizationError = require('../errors/authorization-err'); // 401
 const NotFoundError = require('../errors/not-found-err'); // 404
 const EmailConflictError = require('../errors/email-conflict-err'); // 409
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET = 'secret-key' } = process.env;
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;

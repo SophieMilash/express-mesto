@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const AuthorizationError = require('../errors/authorization-err'); // 401
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET = 'secret-key' } = process.env;
 
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
