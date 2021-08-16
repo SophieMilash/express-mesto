@@ -12,7 +12,7 @@ const cardsRoute = require('./routes/card');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
-const { loginValidation, registrationValidation } = require('./middlewares/validation');
+const { validateUserBody, validateUserEntranceData } = require('./middlewares/validation');
 
 const NotFoundError = require('./errors/not-found-err');
 
@@ -36,8 +36,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.post('/signin', loginValidation, login);
-app.post('/signup', registrationValidation, createUser);
+app.post('/signin', validateUserBody, login);
+app.post('/signup', validateUserEntranceData, createUser);
 
 app.use(auth);
 
