@@ -16,7 +16,6 @@ const { validateUserBody, validateUserEntranceData } = require('./middlewares/va
 
 const NotFoundError = require('./errors/not-found-err');
 
-const { PORT = 3000 } = process.env;
 const app = express();
 
 const limiter = rateLimit({
@@ -51,4 +50,4 @@ app.use('*', () => {
 app.use(errors());
 app.use(error);
 
-app.listen(PORT);
+module.exports = app;
