@@ -16,6 +16,8 @@ const { validateUserBody, validateUserEntranceData } = require('./middlewares/va
 
 const NotFoundError = require('./errors/not-found-err');
 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 const app = express();
 
 const limiter = rateLimit({
@@ -23,17 +25,18 @@ const limiter = rateLimit({
   max: 100,
 });
 
-app.use(helmet());
-app.use(limiter);
-app.use(bodyParser.json());
-app.use(cookieParser());
-
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
+
+app.use(helmet());
+app.use(limiter);
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(requestLogger);
 
 app.post('/signin', validateUserEntranceData, login);
 app.post('/signup', validateUserBody, createUser);
@@ -47,6 +50,7 @@ app.use('*', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
 });
 
+app.use(errorLogger);
 app.use(errors());
 app.use(error);
 
